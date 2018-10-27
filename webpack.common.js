@@ -82,6 +82,16 @@ module.exports = {
         ],
       },
       {
+        test: /\.(xml)$/,
+        include: ASSETS_PATH,
+        use: [
+          {
+            loader: 'raw-loader',
+            options: {},
+          },
+        ],
+      },
+      {
         test: /\.(eot|ttf|woff|woff2|svg)$/,
         include: ASSETS_PATH,
         use: [
@@ -94,7 +104,6 @@ module.exports = {
       {
         test: /\.(png|jpg|jpeg|gif)$/,
         include: ASSETS_PATH,
-        exclude: SPRITES_PATH,
         use: [SIZEOF_LOADER_CONFIG],
       },
       {
