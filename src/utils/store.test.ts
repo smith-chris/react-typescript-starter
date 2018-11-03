@@ -40,7 +40,7 @@ const expectPosition = (state: { x: number; y: number }, x: number, y: number) =
 }
 
 describe('store', () => {
-  const computeFluidPropert = makeComputeFluidProperty({
+  const computeFluidProperty = makeComputeFluidProperty({
     value: {
       x: 10,
       y: 0,
@@ -54,9 +54,50 @@ describe('store', () => {
     },
   })
   it('1st hit', () => {
-    expectPosition(computeFluidPropert(220), 10, 0)
+    expectPosition(computeFluidProperty(220), 10, 0)
   })
   it('2nd hit', () => {
-    expectPosition(computeFluidPropert(220 + 20 * FRAME_TIME), 30, 20)
+    expectPosition(computeFluidProperty(220 + 20 * FRAME_TIME), 30, 20)
+  })
+  it('makes real world walues', () => {
+    const getStore = makeComputeFluidProperty({
+      value: {
+        x: 10,
+        y: 0,
+      },
+      func: {
+        data: {
+          x: 1.5,
+          y: 1.3,
+        },
+        time: 0,
+      },
+    })
+    const results = []
+    for (let s = 0; s < 20; s++) {
+      results.push(getStore(s * FRAME_TIME).x)
+    }
+    expect(results).toEqual([
+      10,
+      11.5,
+      13,
+      14.5,
+      16,
+      17.5,
+      19,
+      20.5,
+      22,
+      23.5,
+      25,
+      26.5,
+      28,
+      29.5,
+      31,
+      32.5,
+      34,
+      35.5,
+      37,
+      38.5,
+    ])
   })
 })
