@@ -60,6 +60,7 @@ describe('store', () => {
     expectPosition(computeFluidProperty(220 + 20 * FRAME_TIME), 30, 20)
   })
   it('makes real world walues', () => {
+    const startTime = 0
     const getStore = makeComputeFluidProperty({
       value: {
         x: 10,
@@ -70,11 +71,11 @@ describe('store', () => {
           x: 1.5,
           y: 1.3,
         },
-        time: 0,
+        time: startTime * FRAME_TIME,
       },
     })
     const results = []
-    for (let s = 0; s < 20; s++) {
+    for (let s = startTime; s < 20 + startTime; s++) {
       results.push(getStore(s * FRAME_TIME).x)
     }
     expect(results).toEqual([
