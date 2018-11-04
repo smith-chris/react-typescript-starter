@@ -28,11 +28,10 @@ export const makeComputeFluidProperty = <T>(property: FluidProperty<T>) => (
   time: number,
 ) => {
   const { value, func } = property
-  const timePassed = time - property.func.time
+  const timePassed = time - func.time
   if (timePassed < 0) {
     console.warn(
-      `Time doesnt go backwards! (time=${time})`,
-      JSON.stringify(property, null, 2),
+      `Time doesnt go backwards! (target: ${time} is smaller than start: ${func.time})`,
     )
     return property.value
   }

@@ -11,14 +11,22 @@ let isPlaying = true
 const slider = document.querySelector('.slider') as HTMLInputElement | null
 if (slider) {
   let lastTime = 0
+  let lastSnapshotIndex = -1
   slider.addEventListener('input', () => {
     if (isPlaying) {
       isPlaying = false
       lastTime = ticker.lastTime
-      console.warn('Stop the ticker')
+      console.warn('Pause the ticker')
     }
     const progress = Number(slider.value) / Number(slider.max)
     const time = lastTime * progress
+    const snapshotIndex = findSnapshotIndex(time)
+    if (snapshotIndex !== lastSnapshotIndex) {
+      lastSnapshotIndex = snapshotIndex
+      const [, actionName, newStore] = snapshots[snapshotIndex]
+      console.info(`Action ${snapshotIndex + 1} ${actionName}:  ${show(newStore)}`)
+      getStore = makeComputeFluidProperty(newStore)
+    }
     updateSubs(time)
   })
 }
@@ -35,15 +43,48 @@ const getStoreData = (data: Point, value = Point.ZERO, time = 0) => {
 
 let storeData = getStoreData(Point.ZERO, Point.ZERO, ticker.lastTime)
 
-const makeGetStore = (data: Point, value = Point.ZERO, time = 0) => {
+const snapshots: [number, string, typeof storeData][] = []
+
+const makeGetStore = (
+  data: Point,
+  value = Point.ZERO,
+  time = 0,
+  actionName = 'None',
+) => {
   storeData = getStoreData(data, value, time)
-  console.log('makeGetStore', show(storeData))
-  // console.info(show(storeData))
+  snapshots.push([time, actionName, storeData])
   return makeComputeFluidProperty(storeData)
+}
+// @ts-ignore
+window.__snapshots = snapshots
+// @ts-ignore
+window.__showSnapshots = () => show(snapshots)
+
+const findSnapshotIndex = (timeMS: number) => {
+  let minIndex = 0
+  let maxIndex = snapshots.length - 1
+  let lastCorrectIndex = 0
+
+  while (minIndex <= maxIndex) {
+    // tslint:disable-next-line
+    const currentIndex = ((minIndex + maxIndex) / 2) | 0
+    const [currentTimeMS] = snapshots[currentIndex]
+
+    if (currentTimeMS < timeMS) {
+      lastCorrectIndex = currentIndex
+      minIndex = currentIndex + 1
+    } else if (currentTimeMS > timeMS) {
+      maxIndex = currentIndex - 1
+    } else {
+      return currentIndex
+    }
+  }
+
+  return lastCorrectIndex
 }
 
 console.info('Initial store!')
-let getStore = makeGetStore(new Point(0.1))
+let getStore = makeGetStore(new Point(2), Point.ZERO, 0, 'Setup')
 
 // tslint:disable-next-line
 const subscribers: [Subscriber<any>, Selector<any>][] = []
@@ -72,14 +113,17 @@ ticker.add(() => {
 })
 
 export enum Side {
-  TOP,
-  RIGHT,
-  BOTTOM,
-  LEFT,
+  TOP = 'TOP',
+  RIGHT = 'RIGHT',
+  BOTTOM = 'BOTTOM',
+  LEFT = 'LEFT',
 }
 
 export const actions = {
   bounce: (side: Side) => {
+    if (!isPlaying) {
+      return
+    }
     const newFuncData = { ...storeData.func.data }
     switch (side) {
       case Side.TOP:
@@ -98,7 +142,7 @@ export const actions = {
         break
     }
     if (shallowDiff(newFuncData, storeData.func.data)) {
-      getStore = makeGetStore(newFuncData, store, ticker.lastTime)
+      getStore = makeGetStore(newFuncData, store, ticker.lastTime, `Bounce ${side}`)
     }
   },
 }
