@@ -1,4 +1,7 @@
-export class Point extends PIXI.Point {
+export class Point {
+  constructor(x: number, y?: number)
+  x: number
+  y: number
   static ZERO: Point
 }
 
