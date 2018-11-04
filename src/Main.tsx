@@ -1,5 +1,4 @@
 import { stage, viewport } from 'app/app'
-import { Point } from 'utils/point'
 import { withStore, actions, Side } from 'utils/withStore'
 
 const makeCircle = (circleSize: number) => {
@@ -15,7 +14,7 @@ const circle = makeCircle(20)
 
 stage.addChild(circle)
 
-withStore(store => store)((position: Point) => {
+withStore(store => store)(position => {
   circle.position.x = position.x
   circle.position.y = position.y
 

@@ -1,17 +1,8 @@
-import { shallowDiff } from 'utils/other'
 import { ticker } from 'app/app'
 import { makeComputeFluidProperty } from './store'
 import { Point } from './point'
 
-type Slice<T> = T
-// tslint:disable-next-line
-type Selector<T = any> = (state: any) => Slice<T>
-// tslint:disable-next-line
-type Subscriber<T = any> = (newSlice: Slice<T>) => void
-
-type P = { x: number; y: number }
-
-const getStoreData = (data: P, value = Point.ZERO, time = 0) => {
+const getStoreData = (data: Point, value = Point.ZERO, time = 0) => {
   return {
     value,
     func: {
@@ -31,9 +22,12 @@ const makeGetStore = (data: Point, value = Point.ZERO, time = 0) => {
 
 let getStore = makeGetStore(new Point(0.5))
 
-const subscribers: [Subscriber, Selector][] = []
+// tslint:disable-next-line
+const subscribers: [Subscriber<any>, Selector<any>][] = []
 
 let store = getStore(0)
+type Store = typeof store
+
 // Main and the only game loop
 ticker.add(() => {
   store = getStore(ticker.lastTime)
@@ -81,6 +75,9 @@ export const actions = {
     getStore = makeComputeFluidProperty(newStoreData)
   },
 }
+
+type Selector<T> = (state: Store) => T
+type Subscriber<T> = (newSlice: T) => void
 
 export const withStore = <T>(selector: Selector<T>) => (subscriber: Subscriber<T>) => {
   subscribers.push([subscriber, selector])
