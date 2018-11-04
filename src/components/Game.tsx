@@ -1,20 +1,22 @@
 import React from 'react'
-import { Rect } from './Rect'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { gameActions } from 'store/game'
+import { withStore, actions, Side } from 'utils/withStore'
+import { viewport } from 'app/app'
+import { Rectangle } from 'utils/point'
+import { Circle } from './Circle'
 
-const withStore = connect(
-  (state: StoreState) => state.game,
-  (dispatch: Dispatch) => {
-    return bindActionCreators({ ...gameActions }, dispatch)
-  },
-)
-
-export const Game = withStore(({ increment }) => {
-  return (
-    <>
-      <Rect x={0} y={0} width={100} height={100} />
-    </>
-  )
+export const Game = withStore(store => store)(position => {
+  const bounds = new Rectangle(position.x, position.y, 60, 60)
+  if (bounds.top <= 0) {
+    actions.bounce(Side.TOP)
+  }
+  if (bounds.right >= viewport.width) {
+    actions.bounce(Side.RIGHT)
+  }
+  if (bounds.bottom >= viewport.height) {
+    actions.bounce(Side.BOTTOM)
+  }
+  if (bounds.left <= 0) {
+    actions.bounce(Side.LEFT)
+  }
+  return <Circle x={position.x} y={position.y} size={30} />
 })

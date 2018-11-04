@@ -1,3 +1,4 @@
+import React, { Component, ReactChild, ReactType, ComponentType } from 'react'
 import { ticker } from 'app/app'
 import { makeComputeFluidProperty } from './store'
 import { Point } from './point'
@@ -79,6 +80,21 @@ export const actions = {
 type Selector<T> = (state: Store) => T
 type Subscriber<T> = (newSlice: T) => void
 
-export const withStore = <T>(selector: Selector<T>) => (subscriber: Subscriber<T>) => {
-  subscribers.push([subscriber, selector])
+export const withStore = <T extends {}>(selector: Selector<T>) => (
+  RenderComponent: ComponentType<T>,
+) => {
+  return class extends Component {
+    state = selector(store)
+    componentDidMount() {
+      subscribers.push([
+        slice => {
+          this.setState(slice)
+        },
+        selector,
+      ])
+    }
+    render() {
+      return <RenderComponent {...this.state} />
+    }
+  }
 }
