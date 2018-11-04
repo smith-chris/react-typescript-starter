@@ -6,6 +6,7 @@ import { Circle } from './Circle'
 
 export const Game = withStore(store => store)(position => {
   const bounds = new Rectangle(position.x, position.y, 60, 60)
+
   if (bounds.top <= 0) {
     actions.bounce(Side.TOP)
   }

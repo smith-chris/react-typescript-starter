@@ -84,7 +84,7 @@ const findSnapshotIndex = (timeMS: number) => {
 }
 
 console.info('Initial store!')
-let getStore = makeGetStore(new Point(2), Point.ZERO, 0, 'Setup')
+let getStore = makeGetStore(new Point(1), Point.ZERO, 0, 'Setup')
 
 // tslint:disable-next-line
 const subscribers: [Subscriber<any>, Selector<any>][] = []

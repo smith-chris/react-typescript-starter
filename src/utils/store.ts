@@ -35,5 +35,5 @@ export const makeComputeFluidProperty = <T>(property: FluidProperty<T>) => (
     )
     return property.value
   }
-  return applyValue(value, func.data, Math.floor(timePassed / FRAME_TIME))
+  return applyValue(value, func.data, timePassed / FRAME_TIME)
 }
