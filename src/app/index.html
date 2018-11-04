@@ -16,6 +16,32 @@
 <body>
   <div id="app">
   </div>
+  <div class="slidecontainer">
+    <input type="range" min="1" max="10000" value="0" class="slider">
+  </div>
+  <style>
+    .slidecontainer {
+      height: 20px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: 0;
+    }
+
+    .slider {
+      margin: 0;
+      /* -webkit-appearance: none; */
+      /* appearance: none; */
+      width: 100%;
+      height: 100%;
+      background: #d3d3d3;
+      outline: none;
+      opacity: 1;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+  </style>
 </body>
 
 </html>

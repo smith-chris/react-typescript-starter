@@ -30,7 +30,10 @@ export const makeComputeFluidProperty = <T>(property: FluidProperty<T>) => (
   const { value, func } = property
   const timePassed = time - property.func.time
   if (timePassed < 0) {
-    console.warn(`Time doesnt go backwards! (time=${time})`, property)
+    console.warn(
+      `Time doesnt go backwards! (time=${time})`,
+      JSON.stringify(property, null, 2),
+    )
     return property.value
   }
   return applyValue(value, func.data, Math.floor(timePassed / FRAME_TIME))

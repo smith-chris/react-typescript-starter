@@ -1,7 +1,27 @@
-import React, { Component, ReactChild, ReactType, ComponentType } from 'react'
+import React, { Component, ComponentType } from 'react'
 import { ticker } from 'app/app'
 import { makeComputeFluidProperty } from './store'
 import { Point } from './point'
+import { shallowDiff } from './other'
+
+// tslint:disable-next-line
+const show = (data: any) => JSON.stringify(data, null, 2)
+
+let isPlaying = true
+const slider = document.querySelector('.slider') as HTMLInputElement | null
+if (slider) {
+  let lastTime = 0
+  slider.addEventListener('input', () => {
+    if (isPlaying) {
+      isPlaying = false
+      lastTime = ticker.lastTime
+      console.warn('Stop the ticker')
+    }
+    const progress = Number(slider.value) / Number(slider.max)
+    const time = lastTime * progress
+    updateSubs(time)
+  })
+}
 
 const getStoreData = (data: Point, value = Point.ZERO, time = 0) => {
   return {
@@ -13,15 +33,17 @@ const getStoreData = (data: Point, value = Point.ZERO, time = 0) => {
   }
 }
 
-let storeData = getStoreData(Point.ZERO)
+let storeData = getStoreData(Point.ZERO, Point.ZERO, ticker.lastTime)
 
 const makeGetStore = (data: Point, value = Point.ZERO, time = 0) => {
   storeData = getStoreData(data, value, time)
-  console.info(JSON.stringify(storeData, null, 2))
+  console.log('makeGetStore', show(storeData))
+  // console.info(show(storeData))
   return makeComputeFluidProperty(storeData)
 }
 
-let getStore = makeGetStore(new Point(0.5))
+console.info('Initial store!')
+let getStore = makeGetStore(new Point(0.1))
 
 // tslint:disable-next-line
 const subscribers: [Subscriber<any>, Selector<any>][] = []
@@ -29,12 +51,23 @@ const subscribers: [Subscriber<any>, Selector<any>][] = []
 let store = getStore(0)
 type Store = typeof store
 
-// Main and the only game loop
-ticker.add(() => {
-  store = getStore(ticker.lastTime)
+const updateSubs = (ms: number) => {
+  store = getStore(ms)
   for (const sub of subscribers) {
     const [subscriber, selector] = sub
     subscriber(selector(store))
+  }
+}
+
+// Main and the only game loop
+let firstRender = true
+ticker.add(() => {
+  if (isPlaying) {
+    if (firstRender) {
+      firstRender = false
+      console.info('First render!')
+    }
+    updateSubs(ticker.lastTime)
   }
 })
 
@@ -64,16 +97,9 @@ export const actions = {
       default:
         break
     }
-    const newStoreData = {
-      value: store,
-      func: {
-        data: newFuncData,
-        time: ticker.lastTime,
-      },
+    if (shallowDiff(newFuncData, storeData.func.data)) {
+      getStore = makeGetStore(newFuncData, store, ticker.lastTime)
     }
-    console.info(JSON.stringify(newStoreData, null, 2))
-    storeData = newStoreData
-    getStore = makeComputeFluidProperty(newStoreData)
   },
 }
 
