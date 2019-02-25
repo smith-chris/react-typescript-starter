@@ -7,7 +7,7 @@
     "url": "https://github.com/smith-chris/react-starter"
   },
   "scripts": {
-    "start": "webpack-dev-server  --config webpack.dev.js",
+    "start": "webpack-dev-server --config webpack.dev.js",
     "prod": "webpack --config webpack.prod.js -p",
     "test": "jest --watch",
     "lint": "tslint 'src/**/*.{ts,tsx}' --fix",
@@ -84,8 +84,9 @@
     "typescript": "^3.0.1",
     "typings-for-css-modules-loader": "^1.7.0",
     "url-loader": "^0.6.2",
-    "webpack": "^3.12.0",
-    "webpack-dev-server": "^2.11.3",
+    "webpack": "4",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.0",
     "webpack-merge": "^4.1.4"
   }
 }

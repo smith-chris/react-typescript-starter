@@ -56,7 +56,7 @@ module.exports = {
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
     new WatchIgnorePlugin([/sass\.d\.ts$/]),
-    new FriendlyErrorsWebpackPlugin(),
+    // new FriendlyErrorsWebpackPlugin(),
   ],
   module: {
     rules: [
