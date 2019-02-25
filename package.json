@@ -7,8 +7,8 @@
     "url": "https://github.com/smith-chris/react-starter"
   },
   "scripts": {
-    "start": "webpack-dev-server --config webpack.dev.js",
-    "prod": "webpack --config webpack.prod.js -p",
+    "start": "webpack-dev-server --config config/webpack.dev.js",
+    "prod": "webpack --config config/webpack.prod.js -p",
     "test": "jest --watch",
     "lint": "tslint 'src/**/*.{ts,tsx}' --fix",
     "precommit": "lint-staged"
@@ -25,6 +25,10 @@
   "author": "Krzysztof Kowalski",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-es2015": "^7.0.0-beta.53",
+    "@babel/preset-react": "^7.0.0",
     "@inlet/react-pixi": "^0.5.1",
     "@types/keyboardjs": "^2.2.31",
     "@types/lodash.mapvalues": "^4.6.4",

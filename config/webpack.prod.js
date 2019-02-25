@@ -3,25 +3,22 @@ const common = require('./webpack.common.js')
 
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { NamedModulesPlugin, HotModuleReplacementPlugin } = require('webpack')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const { DefinePlugin } = require('webpack')
 
 module.exports = merge(common, {
-  mode: 'none',
-  devtool: 'eval',
-  devServer: {
-    contentBase: path.resolve('./dist'),
-    historyApiFallback: true,
-    quiet: true,
-  },
+  mode: 'production',
+  devtool: 'nosources-source-map',
   plugins: [
+    new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
       template: path.resolve('./src/app/index.html'),
       inject: 'body',
     }),
-    // new NamedModulesPlugin(),
-    new HotModuleReplacementPlugin(),
+    new DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production'),
+      },
+    }),
   ],
-  optimization: {
-    namedModules: true,
-  },
 })

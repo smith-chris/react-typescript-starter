@@ -7,7 +7,7 @@ PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
 const isSafari =
   /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor)
 
-export const DEBUG_MAP = true
+export const DEBUG_MAP = false
 export const DEBUG_MAP_BOUNDS = false
 export const DEBUG_OFFSET = 30
 

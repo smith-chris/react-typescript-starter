@@ -2,7 +2,6 @@ const path = require('path')
 
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const { WatchIgnorePlugin } = require('webpack')
 
 const isDev = process.argv.indexOf('-p') === -1
 
@@ -28,7 +27,7 @@ const SIZEOF_LOADER_CONFIG = {
 }
 
 module.exports = {
-  entry: './src/app/index.ts',
+  entry: './src/main.tsx',
   output: {
     path: path.resolve('./dist'),
     filename: 'bundle.js',
@@ -50,11 +49,7 @@ module.exports = {
     modules: ['node_modules', path.resolve('./src')],
   },
   devtool: 'source-map',
-  plugins: [
-    new ForkTsCheckerWebpackPlugin(),
-    // new WatchIgnorePlugin([/sass\.d\.ts$/]),
-    new FriendlyErrorsWebpackPlugin(),
-  ],
+  plugins: [new ForkTsCheckerWebpackPlugin(), new FriendlyErrorsWebpackPlugin()],
   module: {
     rules: [
       {
