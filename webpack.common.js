@@ -6,9 +6,6 @@ const { WatchIgnorePlugin } = require('webpack')
 
 const isDev = process.argv.indexOf('-p') === -1
 
-let removeNull = array => array.filter(e => e !== null)
-
-const STYLES_PATH = [path.resolve('./src/styles')]
 const ASSETS_PATH = [path.resolve('./src/assets')]
 
 let urlLoaderOptions = Object.assign(
@@ -55,8 +52,8 @@ module.exports = {
   devtool: 'source-map',
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
-    new WatchIgnorePlugin([/sass\.d\.ts$/]),
-    // new FriendlyErrorsWebpackPlugin(),
+    // new WatchIgnorePlugin([/sass\.d\.ts$/]),
+    new FriendlyErrorsWebpackPlugin(),
   ],
   module: {
     rules: [
@@ -110,48 +107,6 @@ module.exports = {
         test: /\.(css)$/,
         include: [path.resolve('./src'), path.resolve('./node_modules')],
         use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.global\.(scss|sass)$/,
-        include: path.resolve('./src'),
-        use: removeNull([
-          'style-loader',
-          'css-loader',
-          'postcss-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              includePaths: STYLES_PATH,
-            },
-          },
-        ]),
-      },
-      {
-        // match only files that do not contain word '.global'
-        test: /^(?!.*(\.global)).*\.(scss|sass)$/,
-        include: path.resolve('./src'),
-        use: removeNull([
-          'style-loader',
-          {
-            loader: 'typings-for-css-modules-loader',
-            options: {
-              localIdentName: isDev
-                ? '[name]_[local]_[hash:base64:3]'
-                : '[hash:base64:10]',
-              modules: true,
-              importLoaders: 1,
-              namedExport: true,
-            },
-          },
-          'postcss-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              includePaths: STYLES_PATH,
-              sourceMap: false,
-            },
-          },
-        ]),
       },
     ],
   },

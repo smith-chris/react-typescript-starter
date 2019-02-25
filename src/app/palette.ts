@@ -1,0 +1,18 @@
+export const palette = {
+  black: 0,
+  blue: 2731519,
+  brown: 11227702,
+  darkBlue: 1911635,
+  darkGray: 6248271,
+  darkGreen: 34641,
+  darkPurple: 8267091,
+  green: 58422,
+  indigo: 8615580,
+  lightGray: 12764103,
+  orange: 16753408,
+  peach: 16764074,
+  pink: 16742312,
+  red: 16711757,
+  white: 16773608,
+  yellow: 16772135,
+}

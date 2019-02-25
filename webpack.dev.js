@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { NamedModulesPlugin, HotModuleReplacementPlugin } = require('webpack')
 
 module.exports = merge(common, {
+  mode: 'none',
   devtool: 'eval',
   devServer: {
     contentBase: path.resolve('./dist'),
@@ -17,7 +18,10 @@ module.exports = merge(common, {
       template: path.resolve('./src/app/index.html'),
       inject: 'body',
     }),
-    new NamedModulesPlugin(),
+    // new NamedModulesPlugin(),
     new HotModuleReplacementPlugin(),
   ],
+  optimization: {
+    namedModules: true,
+  },
 })
