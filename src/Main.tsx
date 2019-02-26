@@ -1,21 +1,25 @@
 import { Sprite } from 'pixi.js'
 
-import { stage, ticker, app } from 'app/app'
+import { stage, app } from 'app/app'
 import bunnyImage from 'assets/bunny.png'
+import { repeatKey } from 'utils'
 
 const bunny = Sprite.fromImage(bunnyImage.src)
-bunny.anchor.set(0.5)
-
+bunny.anchor.set(0.5, 1)
+bunny.y = app.screen.height
+bunny.x = app.screen.width / 2
 stage.addChild(bunny)
 
+repeatKey('right', () => {
+  bunny.x += 1
+})
+
+repeatKey('left', () => {
+  bunny.x -= 1
+})
 const onResize = () => {
-  bunny.x = app.screen.width / 2
-  bunny.y = app.screen.height / 2
+  bunny.y = app.screen.height
 }
 
 window.addEventListener('resize', onResize)
 onResize()
-
-ticker.add(delta => {
-  bunny.rotation += 0.1 * delta
-})
