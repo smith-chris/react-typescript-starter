@@ -1,14 +1,11 @@
-# Redux transition experiment
-
-Playing around building redux-style store driven game
-[Demo](http://smithchris.com/transition-experiment/)
+# React typescript starter
 
 ## How to use
 
 Clone the repo and install local dependencies run:
 
 ```sh
-npm i
+yarn
 ```
 
 --
@@ -16,7 +13,7 @@ npm i
 To develop run:
 
 ```sh
-npm start
+yarn start
 ```
 
 and open [localhost:8080](http://localhost:8080/)
@@ -24,15 +21,15 @@ and open [localhost:8080](http://localhost:8080/)
 To build production package run:
 
 ```sh
-npm run prod
+yarn run prod
 ```
 
 and you will find compiled files in `/dist` directory.
 
 ## Support
 
-Please [open an issue](https://github.com/smith-chris/redux-transition-experiment/issues/new) for support.
+Please [open an issue](https://github.com/smith-chris/react-typescript-starter/issues/new) for support.
 
 ## Contributing
 
-Please contribute using [Github Flow](https://guides.github.com/introduction/flow/). Create a branch, add commits, and [open a pull request](https://github.com/smith-chris/redux-transition-experiment/compare).
+Please contribute using [Github Flow](https://guides.github.com/introduction/flow/). Create a branch, add commits, and [open a pull request](https://github.com/smith-chris/react-typescript-starter/compare).

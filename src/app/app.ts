@@ -1,8 +1,8 @@
 import { Application } from 'pixi.js'
 import { palette } from './palette'
 import styles from './app.css'
-import './fix.css'
 import 'assets/fonts/fonts'
+import './fix.css'
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
 
@@ -17,7 +17,7 @@ const SCREEN_SIZE_FACTOR = DEBUG_MAP ? 1312 : 144
 
 export const viewport = { width: SCREEN_SIZE_FACTOR, height: SCREEN_SIZE_FACTOR }
 
-const App = new Application({
+export const app = new Application({
   ...viewport,
   backgroundColor: DEBUG_MAP_BOUNDS ? palette.pink : palette.white,
   antialias: false,
@@ -34,12 +34,12 @@ const getClosestMultiplier = (base: number, max: number) =>
 if (!appElement) {
   console.warn('App element not found..')
 } else {
-  const canvasElement = App.view
+  const canvasElement = app.view
   appElement.classList.add(styles.app)
   canvasElement.classList.add(styles.canvas)
   appElement.appendChild(canvasElement)
 
-  const resize = () => {
+  const onResize = () => {
     const width = window.innerWidth
     const height = window.innerHeight
     viewport.width = SCREEN_SIZE_FACTOR
@@ -55,20 +55,19 @@ if (!appElement) {
     if (isSafari) {
       // Safari doesnt support `image-rendering: pixelated` :(
       const multiplier = getClosestMultiplier(viewport.width, width)
-      App.stage.scale.set(multiplier)
-      App.renderer.resize(viewport.width * multiplier, viewport.height * multiplier)
+      app.stage.scale.set(multiplier)
+      app.renderer.resize(viewport.width * multiplier, viewport.height * multiplier)
     } else {
-      App.renderer.resize(viewport.width, viewport.height)
+      app.renderer.resize(viewport.width, viewport.height)
     }
     if (DEBUG_MAP_BOUNDS) {
       viewport.width -= DEBUG_OFFSET * 2
       viewport.height -= DEBUG_OFFSET * 2
     }
   }
-  resize()
-
-  window.addEventListener('resize', resize)
+  window.addEventListener('resize', onResize)
+  onResize()
 }
 
-export const stage = App.stage
-export const ticker = App.ticker
+export const stage = app.stage
+export const ticker = app.ticker
