@@ -1,5 +1,6 @@
 import { Application } from 'pixi.js'
 import { palette } from './palette'
+import styles from './app.css'
 import 'assets/fonts/fonts'
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
@@ -17,7 +18,7 @@ export const viewport = { width: SCREEN_SIZE_FACTOR, height: SCREEN_SIZE_FACTOR 
 
 const App = new Application({
   ...viewport,
-  backgroundColor: DEBUG_MAP_BOUNDS ? palette.red : palette.black,
+  backgroundColor: DEBUG_MAP_BOUNDS ? palette.pink : palette.white,
   antialias: false,
   roundPixels: true,
 })
@@ -33,8 +34,8 @@ if (!appElement) {
   console.warn('App element not found..')
 } else {
   const canvasElement = App.view
-  // appElement.classList.add(styles.app)
-  // canvasElement.classList.add(styles.canvas)
+  appElement.classList.add(styles.app)
+  canvasElement.classList.add(styles.canvas)
   appElement.appendChild(canvasElement)
 
   const resize = () => {

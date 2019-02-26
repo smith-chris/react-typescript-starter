@@ -101,7 +101,20 @@ module.exports = {
       {
         test: /\.(css)$/,
         include: [path.resolve('./src'), path.resolve('./node_modules')],
-        use: ['style-loader', 'css-loader'],
+        use: [
+          'style-loader',
+          {
+            loader: 'typings-for-css-modules-loader',
+            options: {
+              localIdentName: isDev
+                ? '[name]_[local]_[hash:base64:3]'
+                : '[hash:base64:10]',
+              modules: true,
+              namedExport: true,
+              importLoaders: 1,
+            },
+          },
+        ],
       },
     ],
   },
