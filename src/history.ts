@@ -10,17 +10,17 @@ type Snapshot = {
   inputs: Input[]
 }
 
-const frames: number[] = []
+export const frameTimes: number[] = []
 const snapshots: Snapshot[] = []
 // @ts-ignore
 window.ss = snapshots
 
 app.ticker.add(delta => {
-  frames.push(delta)
+  frameTimes.push(delta)
 })
 
 const getCurrentSnapshot = (): Snapshot => {
-  const currentFrameIndex = frames.length - 1
+  const currentFrameIndex = Math.max(frameTimes.length - 1, 0)
   const lastSnapshot = snapshots[snapshots.length - 1]
   if (lastSnapshot && lastSnapshot.frameIndex === currentFrameIndex) {
     return lastSnapshot
