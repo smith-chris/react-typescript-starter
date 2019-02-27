@@ -1,19 +1,18 @@
 import keyboardjs from 'keyboardjs'
+import { register } from 'history'
 
-export const repeatKey = (keyName: string, onRepeat: () => void) => {
-  keyboardjs.bind(keyName, onRepeat, onRepeat)
-}
-
-export const handleKey: typeof keyboardjs.bind = (keyName, onPress, onRelease) => {
+export const onKey = (keyName: string, onPress: () => void, onRelease?: () => void) => {
   keyboardjs.bind(
-    'up',
-    (...args) => {
-      const [e] = args
-      if (e) {
-        e.preventRepeat()
-      }
-      onPress(...args)
+    keyName,
+    () => {
+      register({ subject: keyName, action: 'press' })
+      onPress()
     },
-    onRelease,
+    () => {
+      if (typeof onRelease === 'function') {
+        register({ subject: keyName, action: 'release' })
+        onRelease()
+      }
+    },
   )
 }
