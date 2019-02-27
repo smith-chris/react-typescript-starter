@@ -12,12 +12,39 @@ bunny.y = app.screen.height
 bunny.x = app.screen.width / 2
 stage.addChild(bunny)
 
+let state = {
+  bunnyPosition: {
+    x: app.screen.width / 2,
+    y: app.screen.height,
+  },
+}
+
+const initialState = state
+
+const render = (s: typeof state) => {
+  bunny.x = s.bunnyPosition.x
+}
+
 onKey('right', () => {
-  bunny.x += 1
+  state = {
+    ...state,
+    bunnyPosition: {
+      ...state.bunnyPosition,
+      x: state.bunnyPosition.x + 1,
+    },
+  }
+  render(state)
 })
 
 onKey('left', () => {
-  bunny.x -= 1
+  state = {
+    ...state,
+    bunnyPosition: {
+      ...state.bunnyPosition,
+      x: state.bunnyPosition.x - 1,
+    },
+  }
+  render(state)
 })
 
 const onResize = () => {
