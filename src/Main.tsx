@@ -1,10 +1,10 @@
 import { Sprite } from 'pixi.js'
 
-import { stage, app, ticker } from 'app/app'
+import { stage, app } from 'app/app'
 import bunnyImage from 'assets/bunny.png'
-import { onKey } from 'utils'
+import { frameTimes, isPlaying, stop, snapshots } from 'history'
+import { onKey, handlePress } from 'utils'
 import './controls'
-import { frameTimes } from 'history'
 
 const bunny = Sprite.fromImage(bunnyImage.src)
 bunny.anchor.set(0.5, 1)
@@ -33,7 +33,9 @@ onKey('right', () => {
       x: state.bunnyPosition.x + 1,
     },
   }
-  render(state)
+  if (isPlaying) {
+    render(state)
+  }
 })
 
 onKey('left', () => {
@@ -44,7 +46,9 @@ onKey('left', () => {
       x: state.bunnyPosition.x - 1,
     },
   }
-  render(state)
+  if (isPlaying) {
+    render(state)
+  }
 })
 
 const onResize = () => {
@@ -54,20 +58,44 @@ const onResize = () => {
 window.addEventListener('resize', onResize)
 onResize()
 
-// tslint:disable-next-line
-const show = (data: any) => JSON.stringify(data, null, 2)
-
-let isPlaying = true
-const slider = document.querySelector('.slider') as HTMLInputElement | null
+const slider = document.querySelector<HTMLInputElement>('.slider')
 if (slider) {
   slider.addEventListener('input', () => {
-    if (isPlaying) {
-      isPlaying = false
+    if (isPlaying()) {
+      stop()
       slider.max = String(frameTimes.length)
-      ticker.stop()
       console.warn('Pause the ticker')
     }
     const frameIndex = Number(slider.value) - 1
     // Replay the game uptil this index
+    state = initialState
+    let currentSnapushotIndex = 0
+    for (let i = 1; i < frameIndex; i++) {
+      const currentSnapshot = snapshots[currentSnapushotIndex]
+      if (!currentSnapshot) {
+        break
+      }
+      if (currentSnapshot.frameIndex === i) {
+        currentSnapshot.inputs.forEach(({ subject, action }) => {
+          if (subject && action === 'press') {
+            handlePress(subject)()
+          }
+        })
+        currentSnapushotIndex++
+      }
+    }
+    render(state)
   })
+}
+
+for (let i = 1; i < 10; i++) {
+  setTimeout(() => {
+    handlePress('left')()
+  }, i * 50)
+}
+
+for (let i = 1; i < 10; i++) {
+  setTimeout(() => {
+    handlePress('right')()
+  }, 11 * 50 + i * 50)
 }

@@ -23,11 +23,7 @@ export const app = new Application({
   antialias: false,
   roundPixels: true,
 })
-window.app = app
 const appElement = document.querySelector('#app')
-// if (DEBUG_MAP_BOUNDS && appElement) {
-//   appElement.classList.add(styles.debugBounds)
-// }
 
 const getClosestMultiplier = (base: number, max: number) =>
   (max - (max % base)) / base + 1
